@@ -1,0 +1,83 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+    <div id="wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.landing_page.heading') }}</h1>
+            </div>
+
+            {% include 'Base/blocks/alerts.twig' %}
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_add') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" action="{{ url_for('landing_page.add') }}" method="POST" enctype="multipart/form-data">
+                        {# TODO: Adicionar javascript para consultar disponibilidade de SLUG antes de enviar o form #}
+                        <div class="form-group">
+                            <label for="slug">{{ trans('pages.landing_page.form.headings.slug') }}</label>
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="{{ trans('pages.landing_page.form.placeholder.slug') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">{{ trans('pages.landing_page.form.headings.title') }}</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="{{ trans('pages.landing_page.form.placeholder.title') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">{{ trans('pages.landing_page.form.headings.description') }}</label>
+                            <textarea class="form-control" rows="3" id="description" name="description" placeholder="{{ trans('pages.landing_page.form.placeholder.description') }}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="is_active">{{ trans('pages.landing_page.form.headings.is_active') }}</label>
+                            <select class="form-control" id="is_active" name="is_active" required>
+                                <option value="">{{ trans('pages.landing_page.form.placeholder.is_active') }}</option>
+                                <option value="active">{{ trans('pages.landing_page.form.values.active') }}</option>
+                                <option value="inactive">{{ trans('pages.landing_page.form.values.inactive') }}</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-md-flex align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_pixels') }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {{ trans('pages.landing_page.form.placeholder.pixels_save_before') }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-md-flex align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_sections') }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {{ trans('pages.landing_page.form.placeholder.sections_save_before') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-danger">{{ trans('general.cancel') }}</a>
+                            <button type="submit" form="form" class="btn btn-sm btn-primary">{{ trans('general.confirm') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% set confirm_url = url_for('landing_page.list') %}
+    {% include 'Base/blocks/confirm-modal.twig' %}
+{% endblock %}

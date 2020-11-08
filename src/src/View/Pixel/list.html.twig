@@ -1,0 +1,73 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+
+  <div id="wrapper">
+    <div class="container-fluid">
+      <!-- Page Heading -->
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.pixel.heading') }}</h1>
+        
+        <a href="{{ url_for('pixel.add') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+          <i class="fas fa-plus fa-sm text-white-100"></i> {{ trans('pages.pixel.form.buttons.add_new') }}
+        </a>
+      </div>
+
+      {% include 'Base/blocks/alerts.twig' %}
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.pixel.form.headings.header_list') }}</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              {% if data|length > 0 %}
+              <thead>
+                <tr>
+                  <th>{{ trans('pages.pixel.form.headings.id') }}</th>
+                  <th>{{ trans('pages.pixel.form.headings.pixel_type_id') }}</th>
+                  <th>{{ trans('pages.pixel.form.headings.title') }}</th>
+                  <th>{{ trans('pages.pixel.form.headings.value') }}</th>
+                  <th>{{ trans('pages.pixel.form.headings.is_active') }}</th>
+                  <th>{{ trans('pages.pixel.form.headings.actions') }}</th>
+                </tr>
+              </thead>
+              {% endif %}
+              <tbody>
+                {% for pixel in data %}
+                  <tr>
+                    <td>{{ pixel.id }}</td>
+                    <td>{{ pixel.pixelType.title }}</td>
+                    <td>{{ pixel.title }}</td>
+                    <td>{{ pixel.value }}</td>
+                    <td>{{ pixel.is_active == true ? trans('pages.pixel.form.values.active') : trans('pages.pixel.form.values.inactive') }}</td>
+                    <td>
+                      <a href="{{ url_for('pixel.edit', { pixel_id: pixel.id}) }}" class="btn btn-secondary btn-icon-split btn-sm" title="{{ trans('pages.pixel.form.buttons.edit') }}" alt="{{ trans('pages.pixel.form.buttons.edit') }}">
+                        <span class="icon text-white-100">
+                          <i class="fas fa-pen"></i>
+                        </span>
+                      </a>
+                      
+                      <a href="#" data-toggle="modal" data-target="#deleteModal" onClick="changeModalUrl('{{ url_for('pixel.remove', { pixel_id: pixel.id }) }}')" class="btn btn-danger btn-icon-split btn-sm" title="{{ trans('pages.pixel.form.buttons.delete') }}" alt="{{ trans('pages.pixel.form.buttons.delete') }}">
+                        <span class="icon text-white-100">
+                          <i class="fas fa-trash"></i>
+                        </span>
+                      </a>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td class="text-center">{{ trans('general.no_data_found') }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'Base/blocks/delete-modal.twig' %}
+{% endblock %}

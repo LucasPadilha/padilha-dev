@@ -1,0 +1,50 @@
+@import '../../assets/variables.scss';
+@import '../../assets/mixins.scss';
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    .logo-container {
+        max-width: 200px;
+
+        .logo {
+            display: block;
+            max-width: 100%;
+        }
+    }
+
+    .nav-container {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+
+        .item {
+            text-align: center;
+
+            .link {
+                color: rgba(0, 0, 0, 0.45);
+                padding: 0 4px;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                transition: all 150ms ease-in-out;
+                @include linkBoxShadow();
+    
+                &:hover {
+                    color: rgba(255,255,255, 1);
+                    @include linkBoxShadowOnHover();
+                }
+            }
+        }
+
+        .social {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+    }
+}
+

@@ -1,0 +1,24 @@
+@import '../../assets/variables.scss';
+
+.custom-button {
+    min-width: 165px;
+    width: auto;
+    height: 50px;
+    letter-spacing: 0.5px;
+    line-height: 50px;
+    padding: 0 35px 0 35px;
+    font-size: 15px;
+    background-color: opacify($highlightColor, 1);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: normal;
+    border: 2px solid opacify($highlightColor, 1);
+    cursor: pointer;
+
+    &:hover {
+        background-color: white;
+        color: opacify($highlightColor, 1);
+        border: 2px solid opacify($highlightColor, 1);
+    }
+}

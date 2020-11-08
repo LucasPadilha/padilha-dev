@@ -1,0 +1,70 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+    <div id="wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.landing_page_section.heading') }}</h1>
+            </div>
+
+            {% include 'Base/blocks/alerts.twig' %}
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page_section.form.headings.header_add') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" action="{{ url_for('landing_page.section_add', { landing_page_id: parent_data.id }) }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="landing_page_id">{{ trans('pages.landing_page_section.form.headings.landing_page_id') }}</label>
+                            <input type="text" class="form-control" id="landing_page_id" value="{{ parent_data.title }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">{{ trans('pages.landing_page_section.form.headings.title') }}</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="{{ trans('pages.landing_page_section.form.placeholder.title') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="template_name">{{ trans('pages.landing_page_section.form.headings.template_name') }}</label>
+                            <input type="text" class="form-control" id="template_name" name="template_name" placeholder="{{ trans('pages.landing_page_section.form.placeholder.template_name') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="is_active">{{ trans('pages.landing_page_section.form.headings.is_active') }}</label>
+                            <select class="form-control" id="is_active" name="is_active" required>
+                                <option value="">{{ trans('pages.landing_page_section.form.placeholder.is_active') }}</option>
+                                <option value="active">{{ trans('pages.landing_page_section.form.values.active') }}</option>
+                                <option value="inactive">{{ trans('pages.landing_page_section.form.values.inactive') }}</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-md-flex align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page_section.form.headings.header_contents') }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {{ trans('pages.landing_page_section.form.placeholder.contents_save_before') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-danger">{{ trans('general.cancel') }}</a>
+                            <button type="submit" form="form" class="btn btn-sm btn-primary">{{ trans('general.confirm') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% set confirm_url = url_for('landing_page.edit', { landing_page_id: parent_data.id }) %}
+    {% include 'Base/blocks/confirm-modal.twig' %}
+{% endblock %}

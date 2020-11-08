@@ -1,0 +1,24 @@
+version: "3"
+services:
+  padilhadev_web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: padilhadev_web
+    environment:
+      VIRTUAL_HOST: padilha.dev
+      LETSENCRYPT_HOST: padilha.dev
+      LETSENCRYPT_EMAIL: padilhaght+letsencrypt@gmail.com
+    ports:
+      - 80:80
+    #expose:
+    #  - 80
+    volumes:
+      - ../src/:/var/www/html/
+      - ../tools/:/var/www/tools/
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "10"

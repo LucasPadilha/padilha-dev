@@ -1,0 +1,77 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+
+  <div id="wrapper">
+    <div class="container-fluid">
+      <!-- Page Heading -->
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.landing_page.heading') }}</h1>
+        
+        <a href="{{ url_for('landing_page.add') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+          <i class="fas fa-plus fa-sm text-white-100"></i> {{ trans('pages.landing_page.form.buttons.add_new') }}
+        </a>
+      </div>
+
+      {% include 'Base/blocks/alerts.twig' %}
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_list') }}</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+              {% if data|length > 0 %}
+              <thead>
+                <tr>
+                  <th>{{ trans('pages.landing_page.form.headings.id') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.slug') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.title') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.description') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.pixels') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.sections') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.is_active') }}</th>
+                  <th>{{ trans('pages.landing_page.form.headings.actions') }}</th>
+                </tr>
+              </thead>
+              {% endif %}
+              <tbody>
+                {% for landing_page in data %}
+                  <tr>
+                    <td>{{ landing_page.id }}</td>
+                    <td>{{ landing_page.slug }}</td>
+                    <td>{{ landing_page.title }}</td>
+                    <td>{{ landing_page.description | slice(0, 32) }}</td>
+                    <td>{{ landing_page.pixels | length }}</td>
+                    <td>{{ landing_page.sections | length }}</td>
+                    <td>{{ landing_page.is_active == true ? trans('pages.landing_page.form.values.active') : trans('pages.landing_page.form.values.inactive') }}</td>
+                    <td>
+                      <a href="{{ url_for('landing_page.edit', { landing_page_id: landing_page.id}) }}" class="btn btn-secondary btn-icon-split btn-sm" title="{{ trans('pages.landing_page.form.buttons.edit') }}" alt="{{ trans('pages.landing_page.form.buttons.edit') }}">
+                        <span class="icon text-white-100">
+                          <i class="fas fa-pen"></i>
+                        </span>
+                      </a>
+                      
+                      <a href="#" data-toggle="modal" data-target="#deleteModal" onClick="changeModalUrl('{{ url_for('landing_page.remove', { landing_page_id: landing_page.id }) }}')" class="btn btn-danger btn-icon-split btn-sm" title="{{ trans('pages.landing_page.form.buttons.delete') }}" alt="{{ trans('pages.landing_page.form.buttons.delete') }}">
+                        <span class="icon text-white-100">
+                          <i class="fas fa-trash"></i>
+                        </span>
+                      </a>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td class="text-center">{{ trans('general.no_data_found') }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'Base/blocks/delete-modal.twig' %}
+{% endblock %}

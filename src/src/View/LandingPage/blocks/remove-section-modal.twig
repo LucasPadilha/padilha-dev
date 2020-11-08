@@ -1,0 +1,49 @@
+{% block delete_section_modal %}
+    <!-- Delete section Modal-->
+    <div class="modal fade" id="deleteSectionModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">{{ trans('general.delete_heading') }}</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">{{ trans('general.delete_message') }}</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">{{ trans('general.cancel') }}</button>
+                    <button id="deleteSectionModalBtn" onClick="deleteSectionFunction(this)" data-landing-page-id="" data-section-id="" class="btn btn-primary" href="#">{{ trans('general.confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setupDeleteSectionModal(landing_page_id, section_id) {
+            const btn = $('#deleteSectionModalBtn');
+            btn.data('landing-page-id', landing_page_id).data('section-id', section_id);
+
+            return true;
+        }
+
+        function deleteSectionFunction(el) {
+            const btn = $(el);
+            const tr = $('#table-section').find('tr[data-section-id="'+ btn.data('section-id') +'"]');
+
+            tr.find('i.fas').removeClass('fa-trash').addClass('fa-cog').addClass('fa-spin');
+
+            $.ajax({
+                method: 'DELETE',
+                url: "{{ url_for('ajax.landing_page_section_remove') }}",
+                data: { landing_page_id: btn.data('landing-page-id'), landing_page_section_id: btn.data('section-id') },
+                dataType: 'json'
+            }).done(function(json) {
+                if (json.data.success) {
+                    tr.remove();
+
+                    $('#deleteSectionModal').modal('hide');
+                }
+            });
+        }
+    </script>
+{% endblock %}

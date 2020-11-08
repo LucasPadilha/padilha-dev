@@ -1,0 +1,60 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+    <div id="wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.pixel.heading') }}</h1>
+            </div>
+
+            {% include 'Base/blocks/alerts.twig' %}
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.pixel.form.headings.header_add') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" action="{{ url_for('pixel.add') }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="pixel_type_id">{{ trans('pages.pixel.form.headings.pixel_type_id') }}</label>
+                            <select class="form-control" id="pixel_type_id" name="pixel_type_id" required>
+                                <option value="">{{ trans('pages.pixel.form.placeholder.pixel_type_id') }}</option>
+                                {% for pixel_type in pixel_types %}
+                                    <option value="{{ pixel_type.slug }}">{{ pixel_type.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">{{ trans('pages.pixel.form.headings.title') }}</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="{{ trans('pages.pixel.form.placeholder.title') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="value">{{ trans('pages.pixel.form.headings.value') }}</label>
+                            <input type="text" class="form-control" id="value" name="value" placeholder="{{ trans('pages.pixel.form.placeholder.value') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="is_active">{{ trans('pages.pixel.form.headings.is_active') }}</label>
+                            <select class="form-control" id="is_active" name="is_active" required>
+                                <option value="">{{ trans('pages.pixel.form.placeholder.is_active') }}</option>
+                                <option value="active">{{ trans('pages.pixel.form.values.active') }}</option>
+                                <option value="inactive">{{ trans('pages.pixel.form.values.inactive') }}</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-danger">{{ trans('general.cancel') }}</a>
+                            <button type="submit" form="form" class="btn btn-sm btn-primary">{{ trans('general.confirm') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% set confirm_url = url_for('pixel.list') %}
+    {% include 'Base/blocks/confirm-modal.twig' %}
+{% endblock %}

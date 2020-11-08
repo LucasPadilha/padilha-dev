@@ -1,0 +1,9 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Application\Actions\ActionException;
+
+class ActionRequiredFieldsNotFoundException extends ActionException
+{
+    public $message = 'Required fields not found.';
+}

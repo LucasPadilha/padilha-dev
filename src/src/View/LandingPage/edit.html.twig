@@ -1,0 +1,161 @@
+{% extends 'Base/dashboard.twig' %}
+
+{% block content %}
+    <div id="wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">{{ trans('pages.landing_page.heading') }}</h1>
+            </div>
+
+            {% include 'Base/blocks/alerts.twig' %}
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_add') }}</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" action="{{ url_for('landing_page.add') }}" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="slug">{{ trans('pages.landing_page.form.headings.slug') }}</label>
+                            <input type="text" class="form-control" id="slug" name="slug" placeholder="{{ trans('pages.landing_page.form.placeholder.slug') }}" value="{{ data.slug }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">{{ trans('pages.landing_page.form.headings.title') }}</label>
+                            <input type="text" class="form-control" id="title" name="title" placeholder="{{ trans('pages.landing_page.form.placeholder.title') }}" value="{{ data.title }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">{{ trans('pages.landing_page.form.headings.description') }}</label>
+                            <textarea class="form-control" rows="3" id="description" name="description" placeholder="{{ trans('pages.landing_page.form.placeholder.description') }}">{{data.description  }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="is_active">{{ trans('pages.landing_page.form.headings.is_active') }}</label>
+                            <select class="form-control" id="is_active" name="is_active">
+                                <option value="">{{ trans('pages.landing_page.form.placeholder.is_active') }}</option>
+                                <option value="active" {{ data.is_active == true ? 'selected' : '' }}>{{ trans('pages.landing_page.form.values.active') }}</option>
+                                <option value="inactive" {{ data.is_active == false ? 'selected' : '' }}>{{ trans('pages.landing_page.form.values.inactive') }}</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-md-flex align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_pixels') }}</h6>
+
+                                        <a href="#" data-toggle="modal" data-target="#addPixelModal" onClick="addPixelModal_loadElements({{ data.id }})" class="btn btn-sm btn-primary" title="{{ trans('pages.landing_page.form.buttons.add_new') }}" alt="{{ trans('pages.landing_page.form.buttons.add_new') }}">
+                                            <span class="icon text-white-100">
+                                                <i class="fas fa-plus fa-sm"></i>
+                                            </span>
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" id="table-pixel">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{ trans('pages.pixel.form.headings.pixel_type_id') }}</th>
+                                                    <th>{{ trans('pages.pixel.form.headings.title') }}</th>
+                                                    <th>{{ trans('pages.pixel.form.headings.is_active') }}</th>
+                                                    <th>{{ trans('pages.pixel.form.headings.actions') }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for pixel in data.pixels %}
+                                                <tr data-pixel-id="{{ pixel.id }}">
+                                                    <td>{{ pixel.pixelType.title }}</td>
+                                                    <td>{{ pixel.title }}</td>
+                                                    <td>{{ pixel.is_active == true ? trans('pages.pixel.form.values.active') : trans('pages.pixel.form.values.inactive') }}</td>
+                                                    <td>
+                                                        <a href="#" data-toggle="modal" data-target="#deletePixelModal" onClick="setupDeletePixelModal({{ data.id }}, {{ pixel.id }})" class="btn btn-danger btn-icon-split btn-sm" title="{{ trans('pages.landing_page.form.buttons.delete') }}" alt="{{ trans('pages.landing_page.form.buttons.delete') }}">
+                                                            <span class="icon text-white-100">
+                                                                <i class="fas fa-trash"></i>
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-md-flex align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">{{ trans('pages.landing_page.form.headings.header_sections') }}</h6>
+
+                                        <a href="{{ url_for('landing_page.section_add', { landing_page_id: data.id }) }}" class="btn btn-sm btn-primary" title="{{ trans('pages.landing_page.form.buttons.add_new') }}" alt="{{ trans('pages.landing_page.form.buttons.add_new') }}">
+                                            <span class="icon text-white-100">
+                                                <i class="fas fa-plus fa-sm"></i>
+                                            </span>
+                                        </a> 
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" id="table-section">
+                                        <table class="table table-bordered" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{ trans('pages.landing_page_section.form.headings.title') }}</th>
+                                                    <th>{{ trans('pages.landing_page_section.form.headings.template_name') }}</th>
+                                                    <th>{{ trans('pages.landing_page_section.form.headings.is_active') }}</th>
+                                                    <th>{{ trans('pages.landing_page_section.form.headings.actions') }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for section in data.sections %}
+                                                <tr data-section-id="{{ section.id }}">
+                                                    <td>{{ section.title }}</td>
+                                                    <td>{{ section.template_name }}</td>
+                                                    <td>{{ section.is_active == true ? trans('pages.landing_page_section.form.values.active') : trans('pages.landing_page_section.form.values.inactive') }}</td>
+                                                    <td>
+                                                        <a href="#" data-toggle="modal" data-target="#deleteSectionModal" onClick="setupDeleteSectionModal({{ data.id }}, {{ section.id }})" class="btn btn-danger btn-icon-split btn-sm" title="{{ trans('pages.landing_page.form.buttons.delete') }}" alt="{{ trans('pages.landing_page.form.buttons.delete') }}">
+                                                            <span class="icon text-white-100">
+                                                                <i class="fas fa-trash"></i>
+                                                            </span>
+                                                        </a>
+                                                        
+                                                        <a href="{{ url_for('landing_page.section_edit', { landing_page_id: data.id, landing_page_section_id: section.id }) }}" class="btn btn-primary btn-icon-split btn-sm" title="{{ trans('pages.landing_page.form.buttons.edit') }}" alt="{{ trans('pages.landing_page.form.buttons.edit') }}">
+                                                            <span class="icon text-white-100">
+                                                                <i class="fas fa-pen"></i>
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#" data-toggle="modal" data-target="#confirmModal" class="btn btn-sm btn-danger">{{ trans('general.cancel') }}</a>
+                            <button type="submit" form="form" class="btn btn-sm btn-primary">{{ trans('general.confirm') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% set confirm_url = url_for('landing_page.list') %}
+    {% include 'Base/blocks/confirm-modal.twig' %}
+
+    {% include 'LandingPage/blocks/remove-pixel-modal.twig' %}
+
+    {% include 'LandingPage/blocks/add-pixel-modal.twig' %}
+
+    {% include 'LandingPage/blocks/remove-section-modal.twig' %}
+{% endblock %}

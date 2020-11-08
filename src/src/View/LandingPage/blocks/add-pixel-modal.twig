@@ -1,0 +1,168 @@
+{% block add_pixel_modal %}
+    <!-- Add Pixel Modal-->
+    <div class="modal fade" id="addPixelModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">{{ trans('pages.landing_page.form.modal.add_pixel_heading') }}</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center justify-content-center" id="add-pixel-loading">
+                        <span class="icon text-white-100">
+                            <i class="fas fa-cog fa-lg fa-spin"></i>
+                        </span>
+                    </div>
+
+                    <div class="table-responsive" id="add-pixel-container">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Título</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="add-pixel-elements"></tbody>
+                        </table>
+                    </div>
+                
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" data-dismiss="modal">{{ trans('general.dismiss') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addPixelModal_loadElements(landing_page_id) {
+            const loadingContainer = $('#add-pixel-loading');
+            if (!loadingContainer.hasClass('d-flex')) {
+                loadingContainer.addClass('d-flex').removeClass('d-none');
+            }
+
+            const pixelContainer = $('#add-pixel-container');
+            if (!pixelContainer.hasClass('d-none')) {
+                pixelContainer.addClass('d-none');
+            }
+
+            const elContainer = $('#add-pixel-elements');
+
+            $.ajax({
+                method: "GET",
+                url: "{{ url_for('ajax.landing_page_pixel') }}",
+                data: { landing_page_id: landing_page_id },
+                dataType: 'json'
+            }).done(function(json) {
+                loadingContainer.addClass('d-none').removeClass('d-flex');
+                pixelContainer.removeClass('d-none');
+
+                elContainer.html('');
+
+                if (json.data.length == 0) {
+                    const tr = $('<tr></tr>');
+                    const td = $('<td></td>');
+
+                    td.attr('colspan', '4').addClass('text-center').html("{{ trans('general.no_data_found') }}");
+
+                    tr.append(td);
+
+                    elContainer.append(tr);
+
+                    return;
+                }
+
+                for (const pixel of json.data) {
+                    const tr = $('<tr></tr>');
+
+                    const tdType = $('<td></td>');
+                    const tdTitle = $('<td></td>');
+                    const tdStatus = $('<td></td>');
+                    const tdActions = $('<td></td>');
+
+                    tr.attr('data-id', pixel.id);
+                    
+                    tdType.html(pixel.pixel_type.title);
+                    tr.append(tdType);
+
+                    tdTitle.html(pixel.title);
+                    tr.append(tdTitle);
+
+                    tdStatus.html((pixel.is_active == true ? "{{ trans('pages.pixel.form.values.active') }}" : "{{ trans('pages.pixel.form.values.inactive') }}"));
+                    tr.append(tdStatus);
+                    
+                    const btn = $('<button class="btn btn-sm btn-success" onClick="addPixelModal_addPixel('+ landing_page_id +', '+ pixel.id +')"></button>');
+                    btn.html('<span class="icon text-white-100"><i class="fas fa-plus fa-sm"></i></span>');
+
+                    tdActions.append(btn);
+                    tr.append(tdActions);
+
+                    elContainer.append(tr);
+                }
+            });
+
+            return true;
+        }
+
+        function addPixelModal_addPixel(landing_page_id, pixel_id) {
+            const tr = $('tr[data-id='+pixel_id+']');
+            tr.find('i.fas').removeClass('fa-plus').addClass('fa-cog').addClass('fa-spin');
+
+            $.ajax({
+                method: 'POST',
+                url: "{{ url_for('ajax.landing_page_pixel_add') }}",
+                data: { landing_page_id: landing_page_id, pixel_id: pixel_id },
+                dataType: 'json'
+            }).done(function(json) {
+                if (json.data.success) {
+                    addPixelModal_addTableRow(landing_page_id, pixel_id);
+
+                    addPixelModal_loadElements(landing_page_id);
+                }
+            });
+        }
+
+        function addPixelModal_addTableRow(landing_page_id, pixel_id) {
+            const originalTr = $('tr[data-id='+pixel_id+']');
+            const originalTds = originalTr.children('td');
+
+            const newTr = $('<tr></tr>');
+
+            newTr.attr('data-pixel-id', pixel_id);
+
+            const tdCategory = $('<td></td>');
+            tdCategory.html(originalTds.eq(0).html());
+            newTr.append(tdCategory);
+
+            const tdTitle = $('<td></td>');
+            tdTitle.html(originalTds.eq(1).html());
+            newTr.append(tdTitle);
+
+            const tdStatus = $('<td></td>');
+            tdStatus.html(originalTds.eq(2).html());
+            newTr.append(tdStatus);
+
+            const tdActions = $('<td></td>');
+
+            const anchor = $('<a></a>');
+            anchor
+                .attr('href', '#')
+                .attr('data-toggle', 'modal')
+                .attr('data-target', '#deletePixelModal')
+                .attr('onClick', 'setupDeletePixelModal('+ landing_page_id +', '+ pixel_id +')')
+                .attr('class', 'btn btn-danger btn-icon-split btn-sm')
+                .html('<span class="icon text-white-100"><i class="fas fa-trash"></i></span>');
+
+            tdActions.append(anchor);
+            newTr.append(tdActions);
+
+            $('#table-pixel').find('tbody').append(newTr);
+
+            return true;
+        }
+    </script>
+{% endblock %}

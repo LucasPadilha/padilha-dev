@@ -1,0 +1,17 @@
+@mixin shrinkLabel {
+    top: -14px;
+    font-size: 12px;
+    color: $main-color;
+}
+
+@mixin linkBoxShadow($bottomBorder: 0px) {
+    -webkit-box-shadow: inset 0px $bottomBorder 0px 0px opacify($highlightColor, 0.75);
+    -moz-box-shadow: inset 0px $bottomBorder 0px 0px opacify($highlightColor, 0.75);
+    box-shadow: inset 0px $bottomBorder 0px 0px opacify($highlightColor, 0.75);
+}
+
+@mixin linkBoxShadowOnHover($bottomBorder: -17px) {
+    -webkit-box-shadow: inset 0px -17px 0px 0px opacify($highlightColor, 0.75);
+    -moz-box-shadow: inset 0px -17px 0px 0px opacify($highlightColor, 0.75);
+    box-shadow: inset 0px -17px 0px 0px opacify($highlightColor, 0.75);
+}

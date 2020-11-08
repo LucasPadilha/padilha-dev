@@ -1,0 +1,51 @@
+version: "3"
+services:
+  padilha-dev_web:
+    image: httpd:2.4
+    container_name: padilha-dev_web
+    ports:
+      - 80:80
+    volumes:
+      - ../website/build/:/usr/local/apache2/htdocs/
+    links:
+      - padilha-dev_backend
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "10"
+  padilha-dev_backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: padilha-dev_backend
+    ports:
+      - 8000:80
+    links: 
+      - padilha-dev_db
+    volumes:
+      - ../backend/:/var/www/html/
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "10"
+  padilha-dev_db:
+    image: postgres:9.5
+    container_name: padilha-dev_db
+    environment: 
+      POSTGRES_USER: padilhadev
+      POSTGRES_PASSWORD: padilhadev
+      POSTGRES_DB: padilhadev
+    ports: 
+      - 5432:5432
+    volumes:
+      - ../database/postgresql/:/var/lib/postgresql/data/
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "10"

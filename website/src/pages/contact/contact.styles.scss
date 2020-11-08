@@ -1,0 +1,27 @@
+@import '../../assets/variables.scss';
+
+.contact-page {
+    padding: 0 20px 20px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+
+    .content-container {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+
+        .title {
+            color: opacify($highlightColor, 1);
+            font-weight: bolder;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

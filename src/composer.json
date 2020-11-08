@@ -1,0 +1,37 @@
+{
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "cocur/slugify": "^4.0",
+        "illuminate/database": "^7.7",
+        "illuminate/pagination": "^7.9",
+        "monolog/monolog": "^1.24",
+        "odan/twig-assets": "^3.0",
+        "php-di/php-di": "^6.0",
+        "ramsey/uuid": "^4.0",
+        "robmorgan/phinx": "^0.12.1",
+        "selective/config": "^0.2.0",
+        "slim/psr7": "^1",
+        "slim/slim": "^4.5",
+        "slim/twig-view": "^3.1",
+        "symfony/http-foundation": "^5.0",
+        "symfony/translation": "^5.0"
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t .",
+        "migrate": "phinx migrate --ansi -vvv",
+        "seed": "phinx seed:run --ansi -vvv",
+        "rollback": "phinx rollback --ansi -vvv",
+        "create-migration": "phinx create --ansi",
+        "create-seed": "phinx seed:create --ansi"
+    }
+}
